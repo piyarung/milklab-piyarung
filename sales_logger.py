@@ -11,35 +11,80 @@ then sends a notification via Telegram or LINE bot.
 """
 
 import argparse
+import json
 import os
 import sys
 from datetime import datetime
 
+import gspread
+import requests
+
+
+DEFAULT_SHEET_NAME = "milklab-sheet"
+
 
 def append_to_sheet(menu: str, qty: int, price: float) -> dict:
-    """TODO 1: ใช้ gspread เปิด Sheet ของตัวเอง แล้ว append_row ด้วย [timestamp, menu, qty, price, total]
+    """Append a sales row to the configured Google Sheet and return the saved row payload."""
+    credentials_json = os.environ.get("GOOGLE_SHEETS_CREDENTIALS", "")
+    sheet_name = os.environ.get("GOOGLE_SHEETS_SHEET_NAME", DEFAULT_SHEET_NAME)
 
-    Returns dict {timestamp, menu, qty, price, total} ที่ append แล้ว
-    Raises RuntimeError ถ้า credentials ไม่มี หรือ Sheet ไม่ accessible
-    """
-    raise NotImplementedError("Implement in Session 2 Lab 1.3 (TODO 1)")
+    if not credentials_json:
+        raise RuntimeError("GOOGLE_SHEETS_CREDENTIALS not set")
+
+    try:
+        credentials = json.loads(credentials_json)
+        client = gspread.service_account_from_dict(credentials)
+        spreadsheet = client.open(sheet_name)
+        worksheet = spreadsheet.sheet1
+    except Exception as exc:
+        raise RuntimeError(
+            f"Unable to open Google Sheet '{sheet_name}': {exc}") from exc
+
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    total = qty * price
+    row = [timestamp, menu, qty, price, total]
+    worksheet.append_row(row)
+    return {"timestamp": timestamp, "menu": menu, "qty": qty, "price": price, "total": total}
 
 
 def send_notification(message: str) -> str:
-    """TODO 2: ส่ง message ไปยัง Telegram bot (ใช้ TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID)
-    หรือ LINE bot (ใช้ LINE_CHANNEL_TOKEN) เลือกตัวใดตัวหนึ่ง
+    """Send a notification through Telegram or LINE based on the available credentials."""
+    telegram_token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+    telegram_chat_id = os.environ.get("TELEGRAM_CHAT_ID", "")
+    line_token = os.environ.get("LINE_CHANNEL_TOKEN", "")
 
-    Returns: provider name ที่ใช้ ("telegram" หรือ "line")
-    Raises RuntimeError ถ้า no credentials
-    """
-    raise NotImplementedError("Implement in Session 2 Lab 1.3 (TODO 2)")
+    if telegram_token and telegram_chat_id:
+        response = requests.post(
+            f"https://api.telegram.org/bot{telegram_token}/sendMessage",
+            data={"chat_id": telegram_chat_id, "text": message},
+            timeout=10,
+        )
+        response.raise_for_status()
+        return "telegram"
+
+    if line_token:
+        response = requests.post(
+            "https://api.line.me/v2/bot/message/push",
+            headers={
+                "Authorization": f"Bearer {line_token}",
+                "Content-Type": "application/json",
+            },
+            json={"to": os.environ.get("LINE_USER_ID", ""), "messages": [
+                {"type": "text", "text": message}]},
+            timeout=10,
+        )
+        response.raise_for_status()
+        return "line"
+
+    raise RuntimeError("No Telegram or LINE notification credentials found")
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="MilkLab Sales Logger")
     parser.add_argument("--menu", required=True, help="ชื่อเมนู")
     parser.add_argument("--qty", type=int, required=True, help="จำนวนขวด")
-    parser.add_argument("--price", type=float, required=True, help="ราคาต่อขวด")
+    parser.add_argument("--price", type=float,
+                        required=True, help="ราคาต่อขวด")
     args = parser.parse_args()
 
     try:
@@ -53,9 +98,11 @@ def main() -> int:
 
     try:
         # TODO 4: เรียก send_notification ด้วย message ที่บอกยอดที่บันทึก
-        provider = send_notification(f"บันทึก {args.menu} x{args.qty} = {total} บาท")
+        provider = send_notification(
+            f"บันทึก {args.menu} x{args.qty} = {total} บาท")
     except Exception as exc:
-        print(f"[WARN] บันทึก Sheet สำเร็จแต่ส่งแจ้งเตือนล้มเหลว: {exc}", file=sys.stderr)
+        print(
+            f"[WARN] บันทึก Sheet สำเร็จแต่ส่งแจ้งเตือนล้มเหลว: {exc}", file=sys.stderr)
         return 0
 
     print(f"[OK] บันทึกและแจ้งเตือนผ่าน {provider} เรียบร้อย ยอด {total} บาท")
