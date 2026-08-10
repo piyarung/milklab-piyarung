@@ -110,7 +110,7 @@ def load_index():
         raise RuntimeError("Knowledge base is empty")
 
     if HAS_FAISS_ST:
-        model_name = os.environ.get("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
+        model_name = os.environ.get("EMBEDDING_MODEL", "paraphrase-multilingual-MiniLM-L12-v2")
         try:
             model = SentenceTransformer(model_name)
         except Exception:
