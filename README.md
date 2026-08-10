@@ -1,30 +1,35 @@
-# MilkLab° Solopreneur Starter (Course 69-1)
+# 🥗 FitMeal Solopreneur Starter (Session 3: RAG Chatbot + Evaluation)
 
-Template repo สำหรับวิชา 31-407-106-406 : AI for Solopreneurs
+โครงการระบบ AI Chatbot ร้าน **FitMeal** (อาหารเพื่อสุขภาพ คาร์บต่ำ โปรตีนสูง ควบคุมแคลอรี)
 
-## เริ่มต้น
+## 📌 ภาพรวมโครงสร้างระบบ (Session 3 Deliverables)
 
-1. **Use this template** then Create a new repository (ตั้งชื่อ `milklab-<ชื่อ>`)
-2. เปิด **Codespaces** จาก repo ใหม่
-3. ตั้ง user-level Codespaces secret `GOOGLE_API_KEY` (ดู Quickstart)
-4. รัน `python scripts/verify_setup.py` ใน terminal
+1. **RAG Knowledge Base (`menu_kb.md`)**: ข้อมูลรายการอาหารสุขภาพ, โภชนาการ (Calories/Macros), สารอาหาร, Allergen (ข้อจำกัดนม/กลูเตน/ถั่ว), Keto/Vegan, ที่ตั้ง และ FAQ การจัดส่ง
+2. **Streamlit RAG Chatbot (`app.py`)**: เว็บแอปพลิเคชันสำหรับโต้ตอบลูกค้า ค้นหาด้วย FAISS Vector Search + SentenceTransformers และประมวลผลคำตอบด้วย Gemini API
+3. **Mini Evaluation (`eval.ipynb` & `eval_rag.py`)**: การประเมินผล Retrieval Layer ด้วย 10 Ground-Truth Questions (คำนวณ Precision@3, Recall@3 และแสดง Similarity Score Histogram)
 
-## ไฟล์หลัก
+## 🚀 การใช้งาน (Usage)
 
-| ไฟล์ | Session | คำอธิบาย |
-|---|---|---|
-| `caption_generator.py` | S1 | สร้างแคปชั่นให้โพสต์ MilkLab |
-| `sales_logger.py` | S2 | บันทึกยอดขายลง Google Sheets |
-| `agent_harness.py` | S2 | รับคำสั่งภาษาไทย เรียก tool |
-| `app.py` | S3 | Streamlit RAG chatbot |
+### 1. การรัน Streamlit App ในท้องถิ่น (Local Run)
+```bash
+streamlit run app.py
+```
 
-## เครื่องมือ
+### 2. การประเมินผลระบบ RAG (Evaluation)
+```bash
+python eval_rag.py
+```
+หรือเปิดรันผ่าน Jupyter Notebook `eval.ipynb`
 
-- Python 3.11
-- Gemini API (google-genai)
-- Streamlit (S3)
-- gspread (S2)
+### 3. เครื่องมือเสริมอื่นๆ
+- `caption_generator.py`: สร้างแคปชั่นโปรโมตเมนูสุขภาพ
+- `sales_logger.py`: บันทึกยอดขายลง Google Sheets
+- `agent_harness.py`: ระบบตีความคำสั่งภาษาไทยเรียกใช้เครื่องมืออัตโนมัติ
 
-## ดูคอร์ส
-
-[course-691-stsw](https://github.com/<owner>/course-691-stsw) (link จะ update ตอนสร้าง public repo)
+## 🛠️ ความต้องการระบบ (Requirements)
+- Python 3.11+
+- `streamlit`
+- `sentence-transformers`
+- `faiss-cpu`
+- `google-genai`
+- `matplotlib`, `numpy`

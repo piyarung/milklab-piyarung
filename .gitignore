@@ -1,0 +1,78 @@
+# ===========================
+# Secrets & Environment
+# ===========================
+.env
+*.env
+.env.local
+.env.*.local
+
+# ===========================
+# Python
+# ===========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+*.so
+
+# Virtual Environments
+venv/
+env/
+.venv/
+.env/
+ENV/
+
+# ===========================
+# Jupyter Notebook
+# ===========================
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ===========================
+# FAISS Index Cache
+# ===========================
+*.faiss
+*.index
+faiss_index/
+
+# ===========================
+# Google Service Account
+# ===========================
+credentials.json
+service_account.json
+*-credentials.json
+
+# ===========================
+# Streamlit
+# ===========================
+.streamlit/secrets.toml
+
+# ===========================
+# IDE & OS
+# ===========================
+.vscode/
+.idea/
+*.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===========================
+# Logs & Temp
+# ===========================
+*.log
+*.tmp
+*.bak
+sales_log*.csv

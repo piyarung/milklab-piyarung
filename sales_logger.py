@@ -1,13 +1,11 @@
-"""MilkLab Sales Logger (S2).
+"""FitMeal Sales Logger (S2).
 
 Usage:
-    python sales_logger.py --menu "นมหมีฮอกไกโด" --qty 2 --price 65
+    python sales_logger.py --menu "ข้าวอกไก่ย่างซอสเทอริยากิ" --qty 2 --price 119
 
 Reads GOOGLE_SHEETS_CREDENTIALS and TELEGRAM_BOT_TOKEN (or LINE_CHANNEL_TOKEN) from env.
 Appends row [timestamp, menu, qty, price, total] to a Google Sheet,
 then sends a notification via Telegram or LINE bot.
-
-นักศึกษาต้องเติม TODO ใน 4 จุดด้านล่างใน Session 2 Lab 1.3
 """
 
 import argparse
@@ -20,7 +18,7 @@ import gspread
 import requests
 
 
-DEFAULT_SHEET_NAME = "milklab-sheet"
+DEFAULT_SHEET_NAME = "fitmeal-sheet"
 
 
 def append_to_sheet(menu: str, qty: int, price: float) -> dict:
@@ -80,15 +78,13 @@ def send_notification(message: str) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="MilkLab Sales Logger")
+    parser = argparse.ArgumentParser(description="FitMeal Sales Logger")
     parser.add_argument("--menu", required=True, help="ชื่อเมนู")
-    parser.add_argument("--qty", type=int, required=True, help="จำนวนขวด")
-    parser.add_argument("--price", type=float,
-                        required=True, help="ราคาต่อขวด")
+    parser.add_argument("--qty", type=int, required=True, help="จำนวนกล่อง")
+    parser.add_argument("--price", type=float, required=True, help="ราคาต่อกล่อง")
     args = parser.parse_args()
 
     try:
-        # TODO 3: เรียก append_to_sheet แล้ว extract total
         row = append_to_sheet(args.menu, args.qty, args.price)
         total = row["total"]
     except Exception as exc:
@@ -97,7 +93,6 @@ def main() -> int:
         return 1
 
     try:
-        # TODO 4: เรียก send_notification ด้วย message ที่บอกยอดที่บันทึก
         provider = send_notification(
             f"บันทึก {args.menu} x{args.qty} = {total} บาท")
     except Exception as exc:

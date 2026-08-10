@@ -1,9 +1,9 @@
-"""MilkLab Caption Generator (S1).
+"""FitMeal Caption Generator (S1).
 
 Usage:
     python caption_generator.py
 
-Reads GOOGLE_API_KEY from env. Generates a Thai caption for a milk menu item.
+Reads GOOGLE_API_KEY from env. Generates a Thai caption for a FitMeal menu item.
 """
 
 import os
@@ -14,27 +14,28 @@ from google import genai
 
 
 PROMPT_TEMPLATE = """\
-คุณคือ social media manager ของร้าน MilkLab° ร้านนมสดกลางคืน
+คุณคือ social media manager ของร้าน FitMeal ร้านอาหารสุขภาพ คาร์บต่ำ โปรตีนสูง คุมแคลอรี
 
 จงเขียนแคปชั่นภาษาไทย 2 ถึง 3 ประโยคโปรโมตเมนู: {menu}
 
 เงื่อนไข:
-- โทนสนุก ใช้คำง่าย ใส่ emoji ได้
-- ต้องมี call-to-action ปิดท้าย เช่น สั่งเลย หรือ ทักแชท
+- โทนสดใส เหมาะกับคนรักสุขภาพ ใช้คำง่าย ใส่ emoji ได้
+- เน้นจุดเด่น เช่น แคลอรีต่ำ โปรตีนสูง หรือคาร์บต่ำ
+- ต้องมี call-to-action ปิดท้าย เช่น สั่งเลย หรือ ทักแชท LINE OA (@FitMealThailand)
 - ห้ามใช้ em dash
 """
 
-DEFAULT_GEMINI_MODEL = "gemini-3.5-flash"
+DEFAULT_GEMINI_MODEL = "gemini-2.5-flash"
 MODEL_FALLBACKS = [
-    "gemini-3.5-flash",
     "gemini-2.5-flash",
+    "gemini-3.5-flash",
     "gemini-flash-latest",
     "gemini-2.0-flash",
 ]
 
 
 def generate_caption(menu: str, api_key: str | None = None) -> str:
-    """Generate a Thai caption for the given milk menu item."""
+    """Generate a Thai caption for the given FitMeal menu item."""
     key = api_key or os.environ.get("GOOGLE_API_KEY")
     if not key:
         raise RuntimeError("GOOGLE_API_KEY not set in env or argument")
@@ -56,7 +57,7 @@ def generate_caption(menu: str, api_key: str | None = None) -> str:
                 contents=PROMPT_TEMPLATE.format(menu=menu),
             )
             if response.text:
-                return response.text or ""
+                return response.text.strip()
         except Exception as exc:
             last_error = exc
 
@@ -66,7 +67,7 @@ def generate_caption(menu: str, api_key: str | None = None) -> str:
 
 def main() -> int:
     load_dotenv()
-    menu = input("เมนูที่จะโปรโมต: ").strip()
+    menu = input("เมนูสุขภาพที่จะโปรโมต: ").strip()
     if not menu:
         print("กรุณาใส่ชื่อเมนู")
         return 1

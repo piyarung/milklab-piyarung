@@ -1,7 +1,7 @@
-"""MilkLab Agent Harness (S2).
+"""FitMeal Agent Harness (S2/S3).
 
 Usage:
-    python agent_harness.py --cmd "บันทึกขายนมหมี 2 ขวด ขวดละ 65"
+    python agent_harness.py --cmd "บันทึกขายข้าวอกไก่ย่างซอสเทอริยากิ 2 กล่อง กล่องละ 119"
 
 รับคำสั่งภาษาไทย ส่งให้ Gemini พร้อม tool schema parse response เป็น tool call
 เรียก tool จริง print trace log
@@ -59,7 +59,7 @@ TOOL_SCHEMA = [
 ]
 
 DEFAULT_SHEET_NAME = os.environ.get(
-    "GOOGLE_SHEETS_SHEET_NAME", "milklab-sheet")
+    "GOOGLE_SHEETS_SHEET_NAME", "fitmeal-sheet")
 DEFAULT_MODEL = "gemini-2.5-flash"
 MODEL_FALLBACKS = [
     "gemini-2.5-flash",
@@ -109,7 +109,7 @@ def _gemini_generate_json(cmd: str, api_key: str | None = None) -> dict:
         "Do not add any prose or explanation outside the JSON object.\n"
         f"TOOL_SCHEMA: {json.dumps(TOOL_SCHEMA, ensure_ascii=False)}\n"
         f"User command: {cmd}\n"
-        "Output example: {\"tool\": \"log_sale\", \"args\": {\"menu\": \"นมหมีฮอกไกโด\", \"qty\": 2, \"price\": 65}}\n"
+        "Output example: {\"tool\": \"log_sale\", \"args\": {\"menu\": \"ข้าวอกไก่ย่างซอสเทอริยากิ\", \"qty\": 2, \"price\": 119}}\n"
     )
 
     last_error: Exception | None = None
@@ -155,10 +155,10 @@ def _heuristic_parse_command(cmd: str) -> dict:
             "args": {"message": message or cmd.strip()},
         }
 
-    qty_match = re.search(r"(\d+)\s*ขวด", cmd)
-    price_match = re.search(r"ขวดละ\s*(\d+(?:\.\d+)?)", cmd)
+    qty_match = re.search(r"(\d+)\s*(?:ขวด|กล่อง|จาน|ถุง|ชิ้น)", cmd)
+    price_match = re.search(r"(?:ขวด|กล่อง|จาน|ถุง|ชิ้น)?ละ\s*(\d+(?:\.\d+)?)", cmd)
     menu_match = re.search(
-        r"(?:บันทึก\s*ขาย|บันทึก|ขาย)\s*(.+?)(?=\s+\d+\s*ขวด|\s+ขวดละ|\s+ราคา)", cmd)
+        r"(?:บันทึก\s*ขาย|บันทึก|ขาย)\s*(.+?)(?=\s+\d+\s*(?:ขวด|กล่อง|จาน|ถุง|ชิ้น)|\s*(?:ขวด|กล่อง|จาน|ถุง|ชิ้น)?ละ|\s+ราคา)", cmd)
 
     if qty_match and price_match:
         return {
@@ -178,7 +178,7 @@ def parse_command(cmd: str, api_key: str | None = None) -> dict:
     load_dotenv()
     try:
         tool_call = _gemini_generate_json(cmd, api_key=api_key)
-    except Exception as exc:
+    except Exception:
         tool_call = _heuristic_parse_command(cmd)
 
     if not isinstance(tool_call, dict) or "tool" not in tool_call or "args" not in tool_call:
