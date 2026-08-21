@@ -407,34 +407,48 @@ def apply_custom_styles():
         }
 
         /* ── Gemini-style Floating Chat Input ── */
+        /* stBottom is Streamlit's native wrapper around st.chat_input */
         div[data-testid="stBottom"] {
-            background: transparent !important;
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            z-index: 9998 !important;
+            background: rgba(255,255,255,0.94) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            padding: 14px 20px 18px !important;
+            border-top: 1px solid #e8eaed !important;
         }
         div[data-testid="stChatInput"] {
             background: #f1f3ff !important;
             border: 2px solid #8ab4f8 !important;
             border-radius: 24px !important;
-            box-shadow: 0 4px 20px rgba(99,102,241,0.18), 0 1px 6px rgba(0,0,0,0.06) !important;
+            box-shadow: 0 2px 14px rgba(99,102,241,0.18) !important;
             padding: 4px 8px !important;
-            max-width: 860px !important;
+            max-width: 820px !important;
             margin: 0 auto !important;
         }
         div[data-testid="stChatInput"]:focus-within {
             border-color: #6366f1 !important;
-            box-shadow: 0 4px 28px rgba(99,102,241,0.30) !important;
+            box-shadow: 0 4px 24px rgba(99,102,241,0.32) !important;
         }
         div[data-testid="stChatInput"] textarea {
             background: transparent !important;
             color: #1e1e2e !important;
-            font-size: 0.96rem !important;
+            font-size: 0.95rem !important;
             font-family: 'Kanit', sans-serif !important;
         }
         div[data-testid="stChatInput"] textarea::placeholder {
             color: #9aa0a6 !important;
         }
-        /* Send button */
         div[data-testid="stChatInput"] button {
             color: #6366f1 !important;
+        }
+
+        /* ── Bottom padding so messages aren't hidden under fixed input ── */
+        .stMainBlockContainer {
+            padding-bottom: 120px !important;
         }
 
         /* ── Menu Cards ── */
