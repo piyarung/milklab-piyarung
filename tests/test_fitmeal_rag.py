@@ -1,6 +1,8 @@
 """Unit tests for FitMeal RAG Chatbot components."""
 
 import os
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import unittest
 from app import _chunk_text, load_index, retrieve_top_k
 from agent_harness import _heuristic_parse_command
