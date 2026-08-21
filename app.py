@@ -1,4 +1,4 @@
-"""FitMeal RAG Chatbot (Session 3).
+"""FitMeal Interactive Web Application & RAG Chatbot.
 
 Run locally: streamlit run app.py
 Deploy: push to GitHub then Actions deploys to HuggingFace Space
@@ -30,6 +30,100 @@ MODEL_FALLBACKS = [
     "gemini-3.5-flash",
     "gemini-flash-latest",
     "gemini-2.0-flash",
+]
+
+# FitMeal Menu Data Catalog
+MENU_ITEMS = [
+    {
+        "id": "menu-1",
+        "name": "ข้าวอกไก่ย่างซอสเทอริยากิ",
+        "english_name": "Low-Carb Teriyaki Chicken Rice Bowl",
+        "category": "🍚 ข้าว & จานหลัก (Rice Bowls)",
+        "badge": "Low-Carb",
+        "price": 119,
+        "calories": 350,
+        "protein": 40,
+        "carb": 25,
+        "fat": 5,
+        "ingredients": "อกไก่ลอกหนังย่าง, ข้าวบุกผสมข้าวไรซ์เบอร์รี, บรอกโคลีนึ่ง, แครอต, ซอสเทอริยากิโซเดียมต่ำ",
+        "icon": "🍗",
+        "highlight": "อกไก่ลอกหนังย่างฉ่ำซอสเทอริยากิโซเดียมต่ำ เสิร์ฟพร้อมข้าวบุกไรซ์เบอร์รี"
+    },
+    {
+        "id": "menu-2",
+        "name": "สลัดแซลมอนย่างอะโวคาโด",
+        "english_name": "Keto Grilled Salmon Avocado Salad",
+        "category": "🥗 สลัด & คีโต (Salad & Keto)",
+        "badge": "Keto Special",
+        "price": 159,
+        "calories": 420,
+        "protein": 35,
+        "carb": 8,
+        "fat": 28,
+        "ingredients": "สเต๊กแซลมอนนอร์เวย์ย่าง, อะโวคาโดสด, ผักสลัดออร์แกนิก, มะเขือเทศเชอร์รี, น้ำสลัดงาญี่ปุ่นใสแคลอรีต่ำ",
+        "icon": "🥗",
+        "highlight": "แซลมอนนอร์เวย์ย่างหนังกรอบ อะโวคาโดสด คาร์บต่ำเพียง 8g เหมาะสำหรับสาย Keto"
+    },
+    {
+        "id": "menu-3",
+        "name": "สเต๊กอกไก่พริกไทยดำ + ผักนึ่ง",
+        "english_name": "High-Protein Black Pepper Chicken Steak",
+        "category": "🥩 สเต๊กโปรตีนสูง (High-Protein)",
+        "badge": "High-Protein 45g",
+        "price": 129,
+        "calories": 280,
+        "protein": 45,
+        "carb": 5,
+        "fat": 4,
+        "ingredients": "อกไก่หมักพริกไทยดำย่าง 200 กรัม, บรอกโคลี, ฟักทองนึ่ง, หน่อไม้ฝรั่ง",
+        "icon": "🥩",
+        "highlight": "อกไก่ชิ้นโต 200g อัดแน่นโปรตีน 45g ไขมันต่ำ เหมาะสำหรับสายสร้างกล้ามเนื้อ"
+    },
+    {
+        "id": "menu-4",
+        "name": "ข้าวไรซ์เบอร์รีอกไก่ผัดพริกสด",
+        "english_name": "Clean Stir-Fried Chicken with Fresh Chili",
+        "category": "🍚 ข้าว & จานหลัก (Rice Bowls)",
+        "badge": "Clean Plate",
+        "price": 109,
+        "calories": 320,
+        "protein": 38,
+        "carb": 30,
+        "fat": 4,
+        "ingredients": "อกไก่ผัดพริกสดใช้น้ำมันมะกอก 1 ช้อนชา, ข้าวไรซ์เบอร์รีออร์แกนิก, แตงกวาสด",
+        "icon": "🌶️",
+        "highlight": "รสชาติเผ็ดร้อนกำลังดี ใช้น้ำมันมะกอกแท้ ข้าวไรซ์เบอร์รีออร์แกนิกหอมนุ่ม"
+    },
+    {
+        "id": "menu-5",
+        "name": "ควินัวผักรวมไข่ต้ม",
+        "english_name": "Superfood Quinoa Mix Bowl",
+        "category": "🌱 มังสวิรัติ & Vegan (Plant-Based)",
+        "badge": "Vegan Option",
+        "price": 99,
+        "calories": 290,
+        "protein": 14,
+        "carb": 35,
+        "fat": 8,
+        "ingredients": "เมล็ดควินัวต้ม, ถั่วแระญี่ปุ่น, ข้าวโพดหวาน, แครอต, ไข่ต้ม 1 ฟอง (เลือกไม่ใส่ไข่ต้มได้)",
+        "icon": "🥑",
+        "highlight": "ซูเปอร์ฟู้ดควินัวอุดมด้วยไฟเบอร์และวิตามิน เลือกไม่ใส่ไข่ต้มเพื่อเป็น Vegan ได้"
+    },
+    {
+        "id": "menu-6",
+        "name": "เวย์โปรตีนไอโซเลตปั่นผลไม้รวม",
+        "english_name": "Whey Isolate Berry Blast Smoothie",
+        "category": "🥤 เครื่องดื่มโปรตีน (Protein Drinks)",
+        "badge": "Whey Isolate 25g",
+        "price": 79,
+        "calories": 180,
+        "protein": 25,
+        "carb": 12,
+        "fat": 2,
+        "ingredients": "เวย์โปรตีนไอโซเลต Whey Isolate, สตรอว์เบอร์รี, บลูเบอร์รี, นมพิสตาชิโอไร้น้ำตาล",
+        "icon": "🥤",
+        "highlight": "เวย์โปรตีนเกรดไอโซเลตดูดซึมไว ผสมมิกซ์เบอร์รีสดและนมพิสตาชิโอไร้น้ำตาล"
+    }
 ]
 
 
@@ -205,11 +299,193 @@ def generate_answer(query: str, context_chunks: list[str]) -> tuple[str, dict]:
     return answer, span_meta
 
 
-def main():
-    st.set_page_config(page_title="FitMeal RAG Chatbot 🥗", page_icon="🥗", layout="centered")
+def apply_custom_styles():
+    st.markdown(
+        """
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
+        
+        html, body, [class*="css"] {
+            font-family: 'Kanit', sans-serif;
+        }
+        
+        .main-header {
+            background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 50%, #40916c 100%);
+            padding: 24px 32px;
+            border-radius: 20px;
+            color: #ffffff;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(45, 106, 79, 0.25);
+            text-align: center;
+        }
+        
+        .main-header h1 {
+            font-size: 2.3rem;
+            font-weight: 700;
+            margin: 0;
+            color: #ffffff !important;
+            letter-spacing: 0.5px;
+        }
+        
+        .main-header p {
+            font-size: 1.05rem;
+            margin-top: 8px;
+            color: #d8f3dc;
+            font-weight: 300;
+        }
+        
+        .badge-pill {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #e8f5e9;
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+        
+        .menu-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 18px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+        
+        .menu-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(45, 106, 79, 0.12);
+            border-color: #52b788;
+        }
+
+        .menu-card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1b4332;
+            margin-bottom: 4px;
+        }
+
+        .menu-card-sub {
+            font-size: 0.88rem;
+            color: #718096;
+            margin-bottom: 12px;
+        }
+
+        .price-tag {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2d6a4f;
+            background: #e8f5e9;
+            padding: 4px 12px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .macro-chip {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 6px;
+            margin-top: 8px;
+        }
+        
+        .macro-cal { background: #fff5f5; color: #c53030; }
+        .macro-protein { background: #ebf8ff; color: #2b6cb0; }
+        .macro-carb { background: #feefc3; color: #b7791f; }
+        .macro-fat { background: #f0fff4; color: #276749; }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+def render_menu_modal_dialog():
+    """Render an interactive popup/drawer dialog for viewing & filtering FitMeal menu items."""
+    st.markdown("### 🍱 เลือกดูรายการเมนูร้าน FitMeal แยกตามหมวดหมู่")
     
-    st.title("🥗 FitMeal RAG Chatbot")
-    st.caption("ผู้ช่วย AI ร้าน FitMeal - สอบถามเมนูสุขภาพ คาร์บต่ำ โปรตีนสูง คุมแคลอรี ข้อมูลแพ้อาหาร และการจัดส่ง")
+    categories = [
+        "ทั้งหมด (All)",
+        "🍚 ข้าว & จานหลัก (Rice Bowls)",
+        "🥗 สลัด & คีโต (Salad & Keto)",
+        "🥩 สเต๊กโปรตีนสูง (High-Protein)",
+        "🌱 มังสวิรัติ & Vegan (Plant-Based)",
+        "🥤 เครื่องดื่มโปรตีน (Protein Drinks)"
+    ]
+    
+    selected_cat = st.selectbox("🎯 เลือกกรองตามหมวดหมู่เมนู:", categories)
+    
+    filtered_items = MENU_ITEMS
+    if selected_cat != "ทั้งหมด (All)":
+        filtered_items = [item for item in MENU_ITEMS if item["category"] == selected_cat]
+        
+    cols = st.columns(2)
+    for idx, item in enumerate(filtered_items):
+        with cols[idx % 2]:
+            st.markdown(
+                f"""
+                <div class="menu-card">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <span style="font-size: 1.8rem;">{item['icon']}</span>
+                            <div class="menu-card-title">{item['name']}</div>
+                            <div class="menu-card-sub">{item['english_name']}</div>
+                        </div>
+                        <span class="price-tag">{item['price']} ฿</span>
+                    </div>
+                    <p style="font-size: 0.88rem; color: #4a5568; margin: 8px 0;">{item['highlight']}</p>
+                    <div>
+                        <span class="macro-chip macro-cal">🔥 {item['calories']} kcal</span>
+                        <span class="macro-chip macro-protein">💪 โปรตีน {item['protein']}g</span>
+                        <span class="macro-chip macro-carb">🌾 คาร์บ {item['carb']}g</span>
+                        <span class="macro-chip macro-fat">🥑 ไขมัน {item['fat']}g</span>
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+            
+            b1, b2 = st.columns(2)
+            with b1:
+                if st.button(f"💬 ถาม AI เกี่ยวกับ {item['name']}", key=f"ask-{item['id']}"):
+                    st.session_state["pending_prompt"] = f"ขอข้อมูลโภชนาการ แคลอรี และส่วนผสมของ {item['name']}"
+                    st.rerun()
+            with b2:
+                if st.button(f"🛒 สั่งซื้อ / บันทึกขาย 1 กล่อง", key=f"order-{item['id']}"):
+                    st.session_state["pending_prompt"] = f"สั่งซื้อ {item['name']} 1 กล่อง ราคา {item['price']} บาท"
+                    st.rerun()
+
+
+def main():
+    st.set_page_config(
+        page_title="FitMeal Health & Clean Food 🥗",
+        page_icon="🥗",
+        layout="wide"
+    )
+    
+    apply_custom_styles()
+    
+    st.markdown(
+        """
+        <div class="main-header">
+            <h1>🥗 FitMeal Health & Clean Food</h1>
+            <p>อาหารเพื่อสุขภาพ คาร์บต่ำ โปรตีนสูง ควบคุมแคลอรี ตอบโจทย์คนรักสุขภาพและคนออกกำลังกาย</p>
+            <div>
+                <span class="badge-pill">🔥 Calorie-Controlled</span>
+                <span class="badge-pill">💪 High-Protein</span>
+                <span class="badge-pill">🥑 Keto Friendly</span>
+                <span class="badge-pill">🌱 Vegan Option</span>
+                <span class="badge-pill">📲 LINE OA: @FitMealThailand</span>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
     try:
         index_tuple = load_index()
@@ -217,44 +493,56 @@ def main():
         st.error(f"ไม่สามารถโหลดดัชนีข้อมูลได้: {exc}")
         st.stop()
 
-    if "messages" not in st.session_state:
-        st.session_state.messages = [
-            {
-                "role": "assistant",
-                "content": "สวัสดีครับ! ยินดีต้อนรับสู่ FitMeal 🥗 ร้านอาหารเพื่อสุขภาพ คาร์บต่ำ โปรตีนสูง คุมแคลอรี มีอะไรให้ผู้ช่วย AI แนะนำเกี่ยวกับเมนู สารอาหาร หรือการจัดส่งไหมครับ?"
-            }
-        ]
+    tab_chat, tab_menu = st.tabs(["💬 สอบถาม AI Chatbot (RAG Assistant)", "🍱 หน้าต่างเลือกเมนูอาหาร (Menu Catalog & Selector)"])
+    
+    with tab_menu:
+        render_menu_modal_dialog()
 
-    for msg in st.session_state.messages:
-        with st.chat_message(msg["role"]):
-            st.write(msg["content"])
+    with tab_chat:
+        st.caption("สอบถามรายละเอียดเมนูอาหาร สารอาหาร แคลอรี ข้อจำกัดภูมิแพ้ ค่าจัดส่ง หรือสั่งซื้ออาหาร")
 
-    if prompt := st.chat_input("สอบถามเมนู แคลอรี สารอาหาร หรือค่าจัดส่ง..."):
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.write(prompt)
+        if "messages" not in st.session_state:
+            st.session_state.messages = [
+                {
+                    "role": "assistant",
+                    "content": "สวัสดีครับ! ยินดีต้อนรับสู่ FitMeal 🥗 ร้านอาหารเพื่อสุขภาพ คาร์บต่ำ โปรตีนสูง คุมแคลอรี มีอะไรให้ผู้ช่วย AI แนะนำเกี่ยวกับเมนู สารอาหาร หรือการจัดส่งไหมครับ?"
+                }
+            ]
 
-        with st.chat_message("assistant"):
-            with st.spinner("กำลังค้นหาข้อมูลโภชนาการและเมนู..."):
-                context, scores, r_span = retrieve_top_k(prompt, index_tuple, k=3)
-                answer, g_span = generate_answer(prompt, context)
-            
-            st.write(answer)
-            
-            with st.expander("📌 Source Chunks & Trace Log (ข้อมูลอ้างอิง)"):
-                st.markdown("#### Retrieved Context Chunks:")
-                for i, (c, score) in enumerate(zip(context, scores), 1):
-                    st.markdown(f"**[{i}] Similarity Score: {score:.4f}**\n\n```text\n{c}\n```")
+        # Check for pending prompt triggered from menu cards
+        pending_prompt = st.session_state.pop("pending_prompt", None)
+
+        for msg in st.session_state.messages:
+            with st.chat_message(msg["role"]):
+                st.write(msg["content"])
+
+        user_input = pending_prompt or st.chat_input("สอบถามเมนู แคลอรี สารอาหาร หรือสั่งซื้ออาหาร...")
+
+        if user_input:
+            st.session_state.messages.append({"role": "user", "content": user_input})
+            with st.chat_message("user"):
+                st.write(user_input)
+
+            with st.chat_message("assistant"):
+                with st.spinner("กำลังค้นหาข้อมูลโภชนาการและคำนวณสารอาหาร..."):
+                    context, scores, r_span = retrieve_top_k(user_input, index_tuple, k=3)
+                    answer, g_span = generate_answer(user_input, context)
                 
-                st.markdown("#### Observability Trace Spans:")
-                st.json({
-                    "trace_id": f"trace-{int(time.time()*1000)}",
-                    "query": prompt,
-                    "spans": [r_span, g_span]
-                })
+                st.write(answer)
                 
-        st.session_state.messages.append(
-            {"role": "assistant", "content": answer})
+                with st.expander("📌 Source Chunks & Trace Log (ข้อมูลอ้างอิง)"):
+                    st.markdown("#### Retrieved Context Chunks:")
+                    for i, (c, score) in enumerate(zip(context, scores), 1):
+                        st.markdown(f"**[{i}] Similarity Score: {score:.4f}**\n\n```text\n{c}\n```")
+                    
+                    st.markdown("#### Observability Trace Spans:")
+                    st.json({
+                        "trace_id": f"trace-{int(time.time()*1000)}",
+                        "query": user_input,
+                        "spans": [r_span, g_span]
+                    })
+                    
+            st.session_state.messages.append({"role": "assistant", "content": answer})
 
 
 if __name__ == "__main__":
