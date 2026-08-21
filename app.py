@@ -563,40 +563,44 @@ def main():
                 }
             ]
 
-        # Check for pending prompt triggered from menu cards
-        pending_prompt = st.session_state.pop("pending_prompt", None)
-
+        # 1. Render all messages in chronological order
         for msg in st.session_state.messages:
             with st.chat_message(msg["role"]):
                 st.write(msg["content"])
+                if "context" in msg:
+                    with st.expander("📌 Source Chunks & Trace Log (ข้อมูลอ้างอิง)"):
+                        st.markdown("#### Retrieved Context Chunks:")
+                        for i, (c, score) in enumerate(zip(msg["context"], msg["scores"]), 1):
+                            st.markdown(f"**[{i}] Similarity Score: {score:.4f}**\n\n```text\n{c}\n```")
+                        
+                        st.markdown("#### Observability Trace Spans:")
+                        st.json({
+                            "trace_id": f"trace-{int(time.time()*1000)}",
+                            "query": msg.get("query", ""),
+                            "spans": [msg["r_span"], msg["g_span"]]
+                        })
 
+        # 2. Render chat_input at the very bottom
+        pending_prompt = st.session_state.pop("pending_prompt", None)
         user_input = pending_prompt or st.chat_input("สอบถามเมนู แคลอรี สารอาหาร หรือสั่งซื้ออาหาร...")
 
+        # 3. Process new input and rerun so chat_input remains at the bottom
         if user_input:
             st.session_state.messages.append({"role": "user", "content": user_input})
-            with st.chat_message("user"):
-                st.write(user_input)
-
-            with st.chat_message("assistant"):
-                with st.spinner("กำลังค้นหาข้อมูลโภชนาการและคำนวณสารอาหาร..."):
-                    context, scores, r_span = retrieve_top_k(user_input, index_tuple, k=3)
-                    answer, g_span = generate_answer(user_input, context)
-                
-                st.write(answer)
-                
-                with st.expander("📌 Source Chunks & Trace Log (ข้อมูลอ้างอิง)"):
-                    st.markdown("#### Retrieved Context Chunks:")
-                    for i, (c, score) in enumerate(zip(context, scores), 1):
-                        st.markdown(f"**[{i}] Similarity Score: {score:.4f}**\n\n```text\n{c}\n```")
-                    
-                    st.markdown("#### Observability Trace Spans:")
-                    st.json({
-                        "trace_id": f"trace-{int(time.time()*1000)}",
-                        "query": user_input,
-                        "spans": [r_span, g_span]
-                    })
-                    
-            st.session_state.messages.append({"role": "assistant", "content": answer})
+            
+            context, scores, r_span = retrieve_top_k(user_input, index_tuple, k=3)
+            answer, g_span = generate_answer(user_input, context)
+            
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": answer,
+                "context": context,
+                "scores": scores,
+                "r_span": r_span,
+                "g_span": g_span,
+                "query": user_input
+            })
+            st.rerun()
 
 
 if __name__ == "__main__":
