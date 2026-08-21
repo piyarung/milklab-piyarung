@@ -98,7 +98,9 @@ def _chunk_text(text: str, max_words: int = 80) -> list[str]:
 @st.cache_resource
 def load_index():
     load_dotenv()
-    kb_path = os.path.join(os.path.dirname(__file__), "menu_kb.md")
+    kb_path = os.path.join(os.path.dirname(__file__), "fitmeal_kb.md")
+    if not os.path.exists(kb_path):
+        kb_path = os.path.join(os.path.dirname(__file__), "menu_kb.md")
     if not os.path.exists(kb_path):
         raise FileNotFoundError(f"Knowledge base file not found: {kb_path}")
 
