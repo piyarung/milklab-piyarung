@@ -399,6 +399,24 @@ def apply_custom_styles():
         .macro-protein { background: #ebf8ff; color: #2b6cb0; }
         .macro-carb { background: #feefc3; color: #b7791f; }
         .macro-fat { background: #f0fff4; color: #276749; }
+        
+        /* Pin chat input box to the very bottom of the screen */
+        div[data-testid="stChatInput"] {
+            position: fixed !important;
+            bottom: 20px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: min(800px, 92vw) !important;
+            z-index: 9999 !important;
+            background: #ffffff !important;
+            border-radius: 16px !important;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.08) !important;
+        }
+        
+        /* Add margin at the bottom of the chat container so messages don't get covered by the fixed chat input */
+        div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stChatMessage"]) {
+            padding-bottom: 90px !important;
+        }
         </style>
         """,
         unsafe_allow_html=True
