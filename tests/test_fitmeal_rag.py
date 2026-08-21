@@ -1,6 +1,8 @@
 """Unit tests for FitMeal RAG Chatbot components."""
 
 import os
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import unittest
 from app import _chunk_text, load_index, retrieve_top_k
 from agent_harness import _heuristic_parse_command
@@ -22,7 +24,9 @@ class TestFitMealRAG(unittest.TestCase):
         self.assertEqual(parsed["args"]["price"], 119.0)
 
     def test_knowledge_base_exists(self):
-        kb_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "menu_kb.md")
+        kb_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "fitmeal_kb.md")
+        if not os.path.exists(kb_path):
+            kb_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "menu_kb.md")
         self.assertTrue(os.path.exists(kb_path))
         with open(kb_path, encoding="utf-8") as f:
             content = f.read()

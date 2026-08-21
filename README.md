@@ -4,9 +4,10 @@
 
 ## 📌 ภาพรวมโครงสร้างระบบ (Session 3 Deliverables)
 
-1. **RAG Knowledge Base (`menu_kb.md`)**: ข้อมูลรายการอาหารสุขภาพ, โภชนาการ (Calories/Macros), สารอาหาร, Allergen (ข้อจำกัดนม/กลูเตน/ถั่ว), Keto/Vegan, ที่ตั้ง และ FAQ การจัดส่ง
-2. **Streamlit RAG Chatbot (`app.py`)**: เว็บแอปพลิเคชันสำหรับโต้ตอบลูกค้า ค้นหาด้วย FAISS Vector Search + SentenceTransformers และประมวลผลคำตอบด้วย Gemini API
-3. **Mini Evaluation (`eval.ipynb` & `eval_rag.py`)**: การประเมินผล Retrieval Layer ด้วย 10 Ground-Truth Questions (คำนวณ Precision@3, Recall@3 และแสดง Similarity Score Histogram)
+1. **RAG Knowledge Base (`fitmeal_kb.md`)**: ข้อมูลรายการอาหารสุขภาพ, โภชนาการ (Calories/Macros), สารอาหาร, Allergen (ข้อจำกัดนม/กลูเตน/ถั่ว), Keto/Vegan, ที่ตั้ง และ FAQ การจัดส่ง
+2. **Pivot Documentation (`PIVOT.md`)**: เอกสารรายละเอียดการ Pivot สำหรับร้าน FitMeal
+3. **Streamlit RAG Chatbot (`app.py`)**: เว็บแอปพลิเคชันสำหรับโต้ตอบลูกค้า ค้นหาด้วย FAISS Vector Search + SentenceTransformers และประมวลผลคำตอบด้วย Gemini API
+4. **Mini Evaluation (`eval.ipynb` & `eval_rag.py`)**: การประเมินผล Retrieval Layer ด้วย 10 Ground-Truth Questions (คำนวณ Precision@3, Recall@3 และแสดง Similarity Score Histogram)
 
 ## 🚀 การใช้งาน (Usage)
 

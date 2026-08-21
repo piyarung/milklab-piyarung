@@ -25,12 +25,12 @@ PROMPT_TEMPLATE = """\
 - ห้ามใช้ em dash
 """
 
-DEFAULT_GEMINI_MODEL = "gemini-2.5-flash"
+DEFAULT_GEMINI_MODEL = "gemini-3.6-flash"
 MODEL_FALLBACKS = [
+    "gemini-3.6-flash",
     "gemini-2.5-flash",
-    "gemini-3.5-flash",
+    "gemini-1.5-flash",
     "gemini-flash-latest",
-    "gemini-2.0-flash",
 ]
 
 
