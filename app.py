@@ -303,152 +303,171 @@ def apply_custom_styles():
     st.markdown(
         """
         <style>
-        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
-        
+        @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;600;700&family=Kanit:wght@300;400;500;600;700&display=swap');
+
+        /* ── Global Reset ── */
         html, body, [class*="css"] {
-            font-family: 'Kanit', sans-serif;
+            font-family: 'Kanit', 'Google Sans', sans-serif;
+            background-color: #ffffff;
         }
-        
+
+        /* ── Hide default Streamlit header padding ── */
+        .stAppHeader { display: none !important; }
+        #MainMenu { visibility: hidden; }
+        footer { visibility: hidden; }
+
+        /* ── Main container ── */
+        .stMainBlockContainer {
+            max-width: 860px !important;
+            margin: 0 auto !important;
+            padding: 0 16px 140px 16px !important;
+        }
+
+        /* ── Gradient App Header banner ── */
         .main-header {
-            background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 50%, #40916c 100%);
+            background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 55%, #40916c 100%);
             padding: 24px 32px;
             border-radius: 20px;
-            color: #ffffff;
-            margin-bottom: 24px;
-            box-shadow: 0 10px 30px rgba(45, 106, 79, 0.25);
+            color: #fff;
+            margin-bottom: 18px;
+            box-shadow: 0 10px 30px rgba(45,106,79,0.22);
             text-align: center;
         }
-        
         .main-header h1 {
-            font-size: 2.3rem;
+            font-size: 2.1rem;
             font-weight: 700;
             margin: 0;
-            color: #ffffff !important;
-            letter-spacing: 0.5px;
+            color: #fff !important;
         }
-        
         .main-header p {
-            font-size: 1.05rem;
-            margin-top: 8px;
+            font-size: 1rem;
+            margin-top: 6px;
             color: #d8f3dc;
             font-weight: 300;
         }
-        
         .badge-pill {
             display: inline-block;
-            background: rgba(255, 255, 255, 0.18);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255,255,255,0.16);
+            border: 1px solid rgba(255,255,255,0.28);
             color: #e8f5e9;
             padding: 4px 14px;
             border-radius: 50px;
-            font-size: 0.82rem;
-            margin: 4px;
+            font-size: 0.8rem;
+            margin: 3px;
             font-weight: 500;
         }
-        
+
+        /* ── Tabs ── */
+        button[data-baseweb="tab"] {
+            font-family: 'Kanit', sans-serif !important;
+            font-size: 0.93rem !important;
+            font-weight: 500 !important;
+            color: #5f6368 !important;
+            border-radius: 0 !important;
+            padding: 10px 20px !important;
+            border-bottom: 3px solid transparent !important;
+        }
+        button[aria-selected="true"] {
+            color: #1b4332 !important;
+            border-bottom: 3px solid #2d6a4f !important;
+            font-weight: 600 !important;
+            background: transparent !important;
+        }
+
+        /* ── Gemini-style Chat Messages ── */
+        div[data-testid="stChatMessage"] {
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            padding: 4px 0 !important;
+            margin-bottom: 0 !important;
+            box-shadow: none !important;
+        }
+        /* User bubble */
+        div[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {
+            display: flex;
+            justify-content: flex-end;
+        }
+        div[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) .stMarkdown {
+            background: #e8f5e9 !important;
+            border-radius: 18px 18px 4px 18px !important;
+            padding: 10px 16px !important;
+            color: #1b4332 !important;
+            max-width: 78% !important;
+            font-size: 0.95rem !important;
+        }
+        /* Assistant bubble */
+        div[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) .stMarkdown {
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 4px 18px 18px 18px !important;
+            padding: 10px 16px !important;
+            max-width: 86% !important;
+            font-size: 0.95rem !important;
+        }
+
+        /* ── Gemini-style Floating Chat Input ── */
+        div[data-testid="stBottom"] {
+            background: transparent !important;
+        }
+        div[data-testid="stChatInput"] {
+            background: #f1f3ff !important;
+            border: 2px solid #8ab4f8 !important;
+            border-radius: 24px !important;
+            box-shadow: 0 4px 20px rgba(99,102,241,0.18), 0 1px 6px rgba(0,0,0,0.06) !important;
+            padding: 4px 8px !important;
+            max-width: 860px !important;
+            margin: 0 auto !important;
+        }
+        div[data-testid="stChatInput"]:focus-within {
+            border-color: #6366f1 !important;
+            box-shadow: 0 4px 28px rgba(99,102,241,0.30) !important;
+        }
+        div[data-testid="stChatInput"] textarea {
+            background: transparent !important;
+            color: #1e1e2e !important;
+            font-size: 0.96rem !important;
+            font-family: 'Kanit', sans-serif !important;
+        }
+        div[data-testid="stChatInput"] textarea::placeholder {
+            color: #9aa0a6 !important;
+        }
+        /* Send button */
+        div[data-testid="stChatInput"] button {
+            color: #6366f1 !important;
+        }
+
+        /* ── Menu Cards ── */
         .menu-card {
-            background: #ffffff;
+            background: #fff;
             border: 1px solid #e2e8f0;
             border-radius: 16px;
             padding: 20px;
-            margin-bottom: 18px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            margin-bottom: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
         }
-        
         .menu-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 24px rgba(45, 106, 79, 0.12);
+            box-shadow: 0 10px 22px rgba(45,106,79,0.12);
             border-color: #52b788;
         }
-
-        .menu-card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1b4332;
-            margin-bottom: 4px;
-        }
-
-        .menu-card-sub {
-            font-size: 0.88rem;
-            color: #718096;
-            margin-bottom: 12px;
-        }
-
+        .menu-card-title { font-size: 1.2rem; font-weight: 600; color: #1b4332; margin-bottom: 4px; }
+        .menu-card-sub   { font-size: 0.87rem; color: #718096; margin-bottom: 10px; }
         .price-tag {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #2d6a4f;
-            background: #e8f5e9;
-            padding: 4px 12px;
-            border-radius: 10px;
-            display: inline-block;
+            font-size: 1.25rem; font-weight: 700; color: #2d6a4f;
+            background: #e8f5e9; padding: 4px 12px;
+            border-radius: 10px; display: inline-block;
         }
-
         .macro-chip {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-right: 6px;
-            margin-top: 8px;
+            display: inline-block; padding: 3px 10px;
+            border-radius: 8px; font-size: 0.78rem; font-weight: 600;
+            margin-right: 5px; margin-top: 7px;
         }
-        
-        .macro-cal { background: #fff5f5; color: #c53030; }
+        .macro-cal     { background: #fff5f5; color: #c53030; }
         .macro-protein { background: #ebf8ff; color: #2b6cb0; }
-        .macro-carb { background: #feefc3; color: #b7791f; }
-        .macro-fat { background: #f0fff4; color: #276749; }
-        
-        /* Tabs Styling */
-        button[data-baseweb="tab"] {
-            border-radius: 12px 12px 0 0 !important;
-            font-size: 0.95rem !important;
-            font-weight: 500 !important;
-            padding: 8px 18px !important;
-            margin-right: 6px !important;
-        }
-        
-        button[aria-selected="true"] {
-            background-color: #a3e635 !important;
-            color: #1a2e05 !important;
-            font-weight: 600 !important;
-        }
-
-        /* Chat Message Styling */
-        div[data-testid="stChatMessage"] {
-            background-color: #f8fafc !important;
-            border-radius: 16px !important;
-            border: 1px solid #e2e8f0 !important;
-            padding: 12px 18px !important;
-            margin-bottom: 14px !important;
-        }
-
-        /* Glowing Blue/Violet Bottom Chat Input Box - Matches screenshot */
-        div[data-testid="stChatInput"] {
-            position: fixed !important;
-            bottom: 24px !important;
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            width: min(850px, 92vw) !important;
-            z-index: 9999 !important;
-            background: #f1f5f9 !important;
-            border: 2.5px solid #818cf8 !important;
-            border-radius: 28px !important;
-            box-shadow: 0 12px 35px rgba(99, 102, 241, 0.25), 0 4px 14px rgba(0, 0, 0, 0.05) !important;
-            padding: 6px 12px !important;
-        }
-        
-        div[data-testid="stChatInput"] textarea {
-            background: transparent !important;
-            color: #334155 !important;
-            font-size: 0.95rem !important;
-        }
-        
-        /* Ensure main scroll container has enough bottom space */
-        .stMainBlockContainer {
-            padding-bottom: 120px !important;
-        }
+        .macro-carb    { background: #feefc3; color: #b7791f; }
+        .macro-fat     { background: #f0fff4; color: #276749; }
         </style>
         """,
         unsafe_allow_html=True
@@ -597,69 +616,56 @@ def main():
         st.error(f"ไม่สามารถโหลดดัชนีข้อมูลได้: {exc}")
         st.stop()
 
-    tab_chat, tab_menu = st.tabs(["💬 สอบถาม AI Chatbot (RAG Assistant)", "🍱 หน้าต่างเลือกเมนูอาหาร (Menu Catalog & Selector)"])
-    
+    # ── Active tab tracker ──────────────────────────────────────────────────
+    if "active_tab" not in st.session_state:
+        st.session_state.active_tab = "chat"
+
+    tab_chat, tab_menu = st.tabs([
+        "💬 สอบถาม AI Chatbot (RAG Assistant)",
+        "🍱 หน้าต่างเลือกเมนูอาหาร (Menu Catalog & Selector)"
+    ])
+
     with tab_menu:
+        st.session_state.active_tab = "menu"
         render_menu_modal_dialog(index_tuple)
 
     with tab_chat:
-        st.caption("สอบถามรายละเอียดเมนูอาหาร สารอาหาร แคลอรี ข้อจำกัดภูมิแพ้ ค่าจัดส่ง หรือสั่งซื้ออาหาร")
+        st.session_state.active_tab = "chat"
 
         if "messages" not in st.session_state:
             st.session_state.messages = [
                 {
                     "role": "assistant",
-                    "content": "สวัสดีครับ! ยินดีต้อนรับสู่ FitMeal 🥗 ร้านอาหารเพื่อสุขภาพ คาร์บต่ำ โปรตีนสูง คุมแคลอรี มีอะไรให้ผู้ช่วย AI แนะนำเกี่ยวกับเมนู สารอาหาร หรือการจัดส่งไหมครับ?"
+                    "content": "สวัสดีครับ! ยินดีต้อนรับสู่ FitMeal 🥗\n\nผมคือ AI Assistant ของร้านอาหารเพื่อสุขภาพ **FitMeal** พร้อมช่วยตอบคำถามเกี่ยวกับ:\n- 🍽️ รายละเอียดเมนูและส่วนผสม\n- 🔥 ข้อมูลโภชนาการ แคลอรี Protein/Carb/Fat\n- 🚴 คำแนะนำสำหรับนักกีฬาและคนควบคุมน้ำหนัก\n- 🚚 การสั่งซื้อและจัดส่ง\n\nมีอะไรให้ช่วยไหมครับ?"
                 }
             ]
 
-        chat_container = st.container()
+        # Message history
+        for msg in st.session_state.messages:
+            with st.chat_message(msg["role"]):
+                st.markdown(msg["content"])
+                if "context" in msg:
+                    with st.expander("📌 Source Chunks & Trace Log (ข้อมูลอ้างอิง)"):
+                        st.markdown("**Retrieved Context Chunks:**")
+                        for i, (c, score) in enumerate(zip(msg["context"], msg["scores"]), 1):
+                            st.markdown(f"**[{i}] Similarity Score: {score:.4f}**\n\n```\n{c}\n```")
+                        st.markdown("**Observability Trace Spans:**")
+                        st.json({
+                            "trace_id": f"trace-{int(time.time()*1000)}",
+                            "query": msg.get("query", ""),
+                            "spans": [msg["r_span"], msg["g_span"]]
+                        })
 
-        with chat_container:
-            for msg in st.session_state.messages:
-                with st.chat_message(msg["role"]):
-                    st.write(msg["content"])
-                    if "context" in msg:
-                        with st.expander("📌 Source Chunks & Trace Log (ข้อมูลอ้างอิง)"):
-                            st.markdown("#### Retrieved Context Chunks:")
-                            for i, (c, score) in enumerate(zip(msg["context"], msg["scores"]), 1):
-                                st.markdown(f"**[{i}] Similarity Score: {score:.4f}**\n\n```text\n{c}\n```")
-                            
-                            st.markdown("#### Observability Trace Spans:")
-                            st.json({
-                                "trace_id": f"trace-{int(time.time()*1000)}",
-                                "query": msg.get("query", ""),
-                                "spans": [msg["r_span"], msg["g_span"]]
-                            })
-
-    # Render st.chat_input at page level so Streamlit pins it to the bottom of the window
+    # ── Chat input lives at page level → Streamlit auto-pins it to bottom ──
     pending_prompt = st.session_state.pop("pending_prompt", None)
     user_input = pending_prompt or st.chat_input("สอบถามเมนู แคลอรี สารอาหาร หรือสั่งซื้ออาหาร...")
 
     if user_input:
         st.session_state.messages.append({"role": "user", "content": user_input})
-        
-        with chat_container:
-            with st.chat_message("user"):
-                st.write(user_input)
 
-            with st.chat_message("assistant"):
-                with st.spinner("กำลังค้นหาข้อมูลโภชนาการและคำนวณสารอาหาร..."):
-                    context, scores, r_span = retrieve_top_k(user_input, index_tuple, k=3)
-                    answer, g_span = generate_answer(user_input, context)
-                
-                st.write(answer)
-                with st.expander("📌 Source Chunks & Trace Log (ข้อมูลอ้างอิง)"):
-                    st.markdown("#### Retrieved Context Chunks:")
-                    for i, (c, score) in enumerate(zip(context, scores), 1):
-                        st.markdown(f"**[{i}] Similarity Score: {score:.4f}**\n\n```text\n{c}\n```")
-                    
-                    st.markdown("#### Observability Trace Spans:")
-                    st.json({
-                        "trace_id": f"trace-{int(time.time()*1000)}",
-                        "query": user_input,
-                        "spans": [r_span, g_span]
-                    })
+        with st.spinner("FitMeal AI กำลังค้นหาข้อมูล..."):
+            context, scores, r_span = retrieve_top_k(user_input, index_tuple, k=3)
+            answer, g_span = generate_answer(user_input, context)
 
         st.session_state.messages.append({
             "role": "assistant",
