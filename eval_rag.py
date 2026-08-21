@@ -5,10 +5,15 @@ and generates a similarity score histogram plot.
 """
 
 import os
+import sys
 import json
 import matplotlib.pyplot as plt
 import numpy as np
 from app import load_index, retrieve_top_k
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 
 GROUND_TRUTH = [
