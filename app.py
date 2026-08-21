@@ -400,22 +400,54 @@ def apply_custom_styles():
         .macro-carb { background: #feefc3; color: #b7791f; }
         .macro-fat { background: #f0fff4; color: #276749; }
         
-        /* Pin chat input box to the very bottom of the screen */
-        div[data-testid="stChatInput"] {
-            position: fixed !important;
-            bottom: 20px !important;
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            width: min(800px, 92vw) !important;
-            z-index: 9999 !important;
-            background: #ffffff !important;
-            border-radius: 16px !important;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.08) !important;
+        /* Tabs Styling */
+        button[data-baseweb="tab"] {
+            border-radius: 12px 12px 0 0 !important;
+            font-size: 0.95rem !important;
+            font-weight: 500 !important;
+            padding: 8px 18px !important;
+            margin-right: 6px !important;
         }
         
-        /* Add margin at the bottom of the chat container so messages don't get covered by the fixed chat input */
-        div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stChatMessage"]) {
-            padding-bottom: 90px !important;
+        button[aria-selected="true"] {
+            background-color: #a3e635 !important;
+            color: #1a2e05 !important;
+            font-weight: 600 !important;
+        }
+
+        /* Chat Message Styling */
+        div[data-testid="stChatMessage"] {
+            background-color: #f8fafc !important;
+            border-radius: 16px !important;
+            border: 1px solid #e2e8f0 !important;
+            padding: 12px 18px !important;
+            margin-bottom: 14px !important;
+        }
+
+        /* Glowing Blue/Violet Bottom Chat Input Box - Matches screenshot */
+        div[data-testid="stChatInput"] {
+            position: fixed !important;
+            bottom: 24px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: min(850px, 92vw) !important;
+            z-index: 9999 !important;
+            background: #f1f5f9 !important;
+            border: 2.5px solid #818cf8 !important;
+            border-radius: 28px !important;
+            box-shadow: 0 12px 35px rgba(99, 102, 241, 0.25), 0 4px 14px rgba(0, 0, 0, 0.05) !important;
+            padding: 6px 12px !important;
+        }
+        
+        div[data-testid="stChatInput"] textarea {
+            background: transparent !important;
+            color: #334155 !important;
+            font-size: 0.95rem !important;
+        }
+        
+        /* Ensure main scroll container has enough bottom space */
+        .stMainBlockContainer {
+            padding-bottom: 120px !important;
         }
         </style>
         """,
