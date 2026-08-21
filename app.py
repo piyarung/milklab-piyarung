@@ -405,8 +405,64 @@ def apply_custom_styles():
     )
 
 
-def render_menu_modal_dialog():
-    """Render an interactive popup/drawer dialog for viewing & filtering FitMeal menu items."""
+@st.dialog("🤖 AI Chatbot - FitMeal Assistant 🥗", width="large")
+def open_chatbot_dialog(prompt: str, index_tuple):
+    st.markdown(f"#### 💬 สอบถามเกี่ยวกับ: **{prompt}**")
+    
+    dialog_key = f"dialog_msgs_{abs(hash(prompt))}"
+    if dialog_key not in st.session_state:
+        with st.spinner("กำลังประมวลผลคำตอบจาก AI..."):
+            context, scores, r_span = retrieve_top_k(prompt, index_tuple, k=3)
+            answer, g_span = generate_answer(prompt, context)
+            st.session_state[dialog_key] = [
+                {"role": "user", "content": prompt},
+                {
+                    "role": "assistant",
+                    "content": answer,
+                    "context": context,
+                    "scores": scores,
+                    "r_span": r_span,
+                    "g_span": g_span
+                }
+            ]
+
+    for msg in st.session_state[dialog_key]:
+        with st.chat_message(msg["role"]):
+            st.write(msg["content"])
+            if "context" in msg:
+                with st.expander("📌 Source Chunks & Trace Log (ข้อมูลอ้างอิง)"):
+                    st.markdown("#### Retrieved Context Chunks:")
+                    for i, (c, score) in enumerate(zip(msg["context"], msg["scores"]), 1):
+                        st.markdown(f"**[{i}] Similarity Score: {score:.4f}**\n\n```text\n{c}\n```")
+                    st.markdown("#### Observability Trace Spans:")
+                    st.json({
+                        "trace_id": f"trace-{int(time.time()*1000)}",
+                        "query": prompt,
+                        "spans": [msg["r_span"], msg["g_span"]]
+                    })
+
+    if follow_up := st.chat_input("พิมพ์คำถามเพิ่มเติมตรงนี้..."):
+        st.session_state[dialog_key].append({"role": "user", "content": follow_up})
+        with st.chat_message("user"):
+            st.write(follow_up)
+
+        with st.chat_message("assistant"):
+            with st.spinner("กำลังค้นหาข้อมูล..."):
+                c, s, r = retrieve_top_k(follow_up, index_tuple, k=3)
+                ans, g = generate_answer(follow_up, c)
+            st.write(ans)
+            st.session_state[dialog_key].append({
+                "role": "assistant",
+                "content": ans,
+                "context": c,
+                "scores": s,
+                "r_span": r,
+                "g_span": g
+            })
+
+
+def render_menu_modal_dialog(index_tuple):
+    """Render an interactive menu section for viewing & filtering FitMeal menu items."""
     st.markdown("### 🍱 เลือกดูรายการเมนูร้าน FitMeal แยกตามหมวดหมู่")
     
     categories = [
@@ -453,12 +509,10 @@ def render_menu_modal_dialog():
             b1, b2 = st.columns(2)
             with b1:
                 if st.button(f"💬 ถาม AI เกี่ยวกับ {item['name']}", key=f"ask-{item['id']}"):
-                    st.session_state["pending_prompt"] = f"ขอข้อมูลโภชนาการ แคลอรี และส่วนผสมของ {item['name']}"
-                    st.rerun()
+                    open_chatbot_dialog(f"ขอข้อมูลโภชนาการ แคลอรี และส่วนผสมของ {item['name']}", index_tuple)
             with b2:
                 if st.button(f"🛒 สั่งซื้อ / บันทึกขาย 1 กล่อง", key=f"order-{item['id']}"):
-                    st.session_state["pending_prompt"] = f"สั่งซื้อ {item['name']} 1 กล่อง ราคา {item['price']} บาท"
-                    st.rerun()
+                    open_chatbot_dialog(f"สั่งซื้อ {item['name']} 1 กล่อง ราคา {item['price']} บาท", index_tuple)
 
 
 def main():
@@ -496,7 +550,7 @@ def main():
     tab_chat, tab_menu = st.tabs(["💬 สอบถาม AI Chatbot (RAG Assistant)", "🍱 หน้าต่างเลือกเมนูอาหาร (Menu Catalog & Selector)"])
     
     with tab_menu:
-        render_menu_modal_dialog()
+        render_menu_modal_dialog(index_tuple)
 
     with tab_chat:
         st.caption("สอบถามรายละเอียดเมนูอาหาร สารอาหาร แคลอรี ข้อจำกัดภูมิแพ้ ค่าจัดส่ง หรือสั่งซื้ออาหาร")
